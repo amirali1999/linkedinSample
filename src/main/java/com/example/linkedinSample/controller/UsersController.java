@@ -21,43 +21,27 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-    @GetMapping(path = "getallusers")
-    public ResponseEntity<?> getUsers() {
-        Response response = new Response(HttpStatus.OK,
-                "Get Users successfully!",
-                usersService.getUsers(),
-                1);
-        return response.createResponseEntity();
+    @GetMapping(path = "getallusers/{page}")
+    public ResponseEntity<?> getUsers(@PathVariable("page") int page) {
+        return usersService.getUsers(page).createResponseEntity();
     }
 
     @PostMapping(path = "adduser")
     public ResponseEntity<?> postUsers(@Valid @RequestBody Users users) throws InvalidCharacterException,
             InvalidLengthException, InvalidPasswordException, EmptyFieldException, DuplicateFieldException,
-            InvalidEmailException, InvalidRolesException, InvalidGenderException {
-        Response response = new Response(HttpStatus.OK,
-                "Add user successfully!",
-                usersService.postUsers(users),
-                1);
-        return response.createResponseEntity();
+            InvalidEmailException, InvalidRolesException {
+        return usersService.postUsers(users).createResponseEntity();
     }
 
     @DeleteMapping(path = "deleteuser")
     public ResponseEntity<?> deleteUsers(@Valid @RequestBody Users users) throws NotFoundException {
-        Response response = new Response(HttpStatus.OK,
-                "Delete Users successfully!",
-                usersService.deleteUsers(users),
-                1);
-        return response.createResponseEntity();
+        return usersService.deleteUsers(users).createResponseEntity();
     }
 
     @PutMapping(path = "updateuser/{usersname}")
     public ResponseEntity<?> putUsers(@PathVariable("usersname") String usersName, @Valid @RequestBody Users users)
             throws NotFoundException, DuplicateFieldException, InvalidCharacterException, InvalidLengthException,
             InvalidPasswordException, InvalidEmailException, InvalidGenderException {
-        Response response = new Response(HttpStatus.OK,
-                "Update Users successfully!",
-                usersService.putUsers(users, usersName),
-                1);
-        return response.createResponseEntity();
+        return usersService.putUsers(users, usersName).createResponseEntity();
     }
 }

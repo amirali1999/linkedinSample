@@ -23,29 +23,24 @@ public class RolesController {
         this.rolesService = rolesService;
     }
 
-    @GetMapping(path = "getallroles")
-    public ResponseEntity<?> getRoles() {
-        Response response = new Response(HttpStatus.OK,
-                "Get roles successfully!",
-                rolesService.getRoles(),
-                1);
-        return response.createResponseEntity();
+    @GetMapping(path = "getallroles/{page}")
+    public ResponseEntity<?> getRoles(@PathVariable("page") int page) {
+        return rolesService.getRoles(page).createResponseEntity();
     }
 
     @PostMapping(path = "addrole")
-    public Roles postRoles(@Valid @RequestBody Roles roles) throws DuplicateFieldException {
-        return rolesService.postRoles(roles);
+    public ResponseEntity<?> postRoles(@Valid @RequestBody Roles roles) throws DuplicateFieldException {
+        return rolesService.postRoles(roles).createResponseEntity();
     }
 
     @DeleteMapping(path = "deleterole")
-    public Roles deleteRoles(@Valid @RequestBody Roles roles) throws NotFoundException {
-        System.out.println(roles);
-        return rolesService.deleteRoles(roles);
+    public ResponseEntity<?> deleteRoles(@Valid @RequestBody Roles roles) throws NotFoundException {
+        return rolesService.deleteRoles(roles).createResponseEntity();
     }
 
     @PutMapping(path = "updaterole/{rolename}")
-    public Roles putRoles(@PathVariable("rolename") String roleName,@Valid @RequestBody Roles roles)
+    public ResponseEntity<?> putRoles(@PathVariable("rolename") String roleName,@Valid @RequestBody Roles roles)
             throws DuplicateFieldException, NotFoundException {
-        return rolesService.putRoles(roles,roleName);
+        return rolesService.putRoles(roles,roleName).createResponseEntity();
     }
 }

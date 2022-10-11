@@ -1,5 +1,6 @@
 package com.example.linkedinSample.service;
 
+import com.example.linkedinSample.Response;
 import com.example.linkedinSample.entity.EGender;
 import com.example.linkedinSample.entity.Roles;
 import com.example.linkedinSample.entity.Users;
@@ -7,6 +8,9 @@ import com.example.linkedinSample.exception.type.*;
 import com.example.linkedinSample.repository.RolesRepository;
 import com.example.linkedinSample.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -28,13 +32,17 @@ public class UsersService {
         this.rolesRepository = rolesRepository;
     }
 
-    public List<Users> getUsers() {
-        return usersRepository.findAll();
+    public Response getUsers(int page) {
+        Page<Users> pages = usersRepository.findAll(PageRequest.of(page-1,10));
+        return new Response(HttpStatus.OK,
+                "Get Users successfully!",
+                pages.get(),
+                pages.getTotalPages());
     }
 
-    public Users postUsers(Users users)
+    public Response postUsers(Users users)
             throws InvalidCharacterException, InvalidLengthException, InvalidPasswordException, EmptyFieldException,
-            DuplicateFieldException, InvalidEmailException, InvalidRolesException, InvalidGenderException {
+            DuplicateFieldException, InvalidEmailException, InvalidRolesException {
         checkEmptyFields(users);
         checkDuplicateUsername(users.getUsername());
         checkDuplicateEmail(users.getEmail());
@@ -43,17 +51,17 @@ public class UsersService {
         checkEmail(users.getEmail());
         users = checkRoles(users);
         usersRepository.save(users);
-        return users;
+        return new Response(HttpStatus.OK, "Add user successfully!", users, 1);
     }
 
-    public Users deleteUsers(Users users) throws NotFoundException {
+    public Response deleteUsers(Users users) throws NotFoundException {
         users = usersRepository.findByUsername(users.getUsername())
                 .orElseThrow(()-> new NotFoundException("User not found!"));
         usersRepository.delete(users);
-        return users;
+        return new Response(HttpStatus.OK, "Delete Users successfully!",users, 1);
     }
 
-    public Users putUsers(Users users,String usersName)
+    public Response putUsers(Users users,String usersName)
             throws NotFoundException, DuplicateFieldException, InvalidCharacterException, InvalidLengthException,
             InvalidPasswordException, InvalidEmailException, InvalidGenderException {
         Users previousUsers = usersRepository.findByUsername(usersName)
@@ -79,7 +87,7 @@ public class UsersService {
             previousUsers.setGender(users.getGender());
         }
         usersRepository.save(previousUsers);
-        return previousUsers;
+        return new Response(HttpStatus.OK, "Update Users successfully!", previousUsers, 1);
     }
 
     private void checkEmptyFields(Users users) throws EmptyFieldException {

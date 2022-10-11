@@ -1,11 +1,15 @@
 package com.example.linkedinSample.service;
 
+import com.example.linkedinSample.Response;
 import com.example.linkedinSample.entity.Roles;
 import com.example.linkedinSample.entity.Users;
 import com.example.linkedinSample.exception.type.DuplicateFieldException;
 import com.example.linkedinSample.exception.type.NotFoundException;
 import com.example.linkedinSample.repository.RolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,24 +23,28 @@ public class RolesService {
         this.rolesRepository = rolesRepository;
     }
 
-    public List<Roles> getRoles() {
-        return rolesRepository.findAll();
+    public Response getRoles(int page) {
+        Page<Roles> pages = rolesRepository.findAll(PageRequest.of(page-1,10));
+        return new Response(HttpStatus.OK,
+                "Get Roles successfully!",
+                pages.get(),
+                pages.getTotalPages());
     }
 
-    public Roles postRoles(Roles roles) throws DuplicateFieldException {
+    public Response postRoles(Roles roles) throws DuplicateFieldException {
         checkDuplicateRoles(roles.getName());
         rolesRepository.save(roles);
-        return roles;
+        return new Response(HttpStatus.OK, "Add role successfully!", roles, 1);
     }
 
-    public Roles deleteRoles(Roles roles) throws NotFoundException {
+    public Response deleteRoles(Roles roles) throws NotFoundException {
         roles = rolesRepository.findByName(roles.getName())
                 .orElseThrow(()-> new NotFoundException("Role not found!"));
         rolesRepository.deleteById(roles.getId());
-        return roles;
+        return new Response(HttpStatus.OK, "Delete role successfully!", roles, 1);
     }
 
-    public Roles putRoles(Roles roles,String roleName) throws DuplicateFieldException, NotFoundException {
+    public Response putRoles(Roles roles,String roleName) throws DuplicateFieldException, NotFoundException {
         Roles previousRole = rolesRepository.findByName(roleName)
                 .orElseThrow(()->new NotFoundException("Role not found!"));
         checkDuplicateRoles(roles.getName());
@@ -48,7 +56,7 @@ public class RolesService {
             previousRole.setDescription(roles.getDescription());
         }
         rolesRepository.save(previousRole);
-        return roles;
+        return new Response(HttpStatus.OK, "Update role successfully!", roles, 1);
     }
 
     private void checkDuplicateRoles(String roleName) throws DuplicateFieldException {
