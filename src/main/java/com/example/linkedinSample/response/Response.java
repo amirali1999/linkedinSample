@@ -1,4 +1,4 @@
-package com.example.linkedinSample;
+package com.example.linkedinSample.response;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,5 +1,7 @@
 package com.example.linkedinSample.repository;
 
+
+import com.example.linkedinSample.entity.RefreshToken;
 import com.example.linkedinSample.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,12 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users,Long> {
-    Optional<Users> findByUsername(String username);
-    Optional<Users> findByEmail(String email);
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
+    Optional<RefreshToken> findByToken(String token);
 
     @Modifying
-    @Query(value = "update Users u set u.password = :password where u.id = :id")
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    void updatePassword(@Param(value = "id") long id, @Param(value = "password") String password);
+    @Query(value = "DELETE from RefreshToken u where u.users.id =:id")
+    void deleteAccessTokens(@Param("id")long id);
+//
+//    @Modifying
+//    int deleteByUser(Users users);
 }

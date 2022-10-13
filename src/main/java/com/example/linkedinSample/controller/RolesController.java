@@ -1,12 +1,10 @@
 package com.example.linkedinSample.controller;
 
-import com.example.linkedinSample.Response;
 import com.example.linkedinSample.entity.Roles;
 import com.example.linkedinSample.exception.type.DuplicateFieldException;
 import com.example.linkedinSample.exception.type.NotFoundException;
 import com.example.linkedinSample.service.RolesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

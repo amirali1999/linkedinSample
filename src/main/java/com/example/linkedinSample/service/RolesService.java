@@ -1,8 +1,7 @@
 package com.example.linkedinSample.service;
 
-import com.example.linkedinSample.Response;
+import com.example.linkedinSample.response.Response;
 import com.example.linkedinSample.entity.Roles;
-import com.example.linkedinSample.entity.Users;
 import com.example.linkedinSample.exception.type.DuplicateFieldException;
 import com.example.linkedinSample.exception.type.NotFoundException;
 import com.example.linkedinSample.repository.RolesRepository;
@@ -11,8 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class RolesService {

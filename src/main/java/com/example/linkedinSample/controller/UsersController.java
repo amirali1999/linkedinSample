@@ -1,11 +1,11 @@
 package com.example.linkedinSample.controller;
 
-import com.example.linkedinSample.Response;
+import com.example.linkedinSample.FeignClientInterceptor;
+import com.example.linkedinSample.entity.JwtBlacklist;
 import com.example.linkedinSample.entity.Users;
 import com.example.linkedinSample.exception.type.*;
+import com.example.linkedinSample.service.JwtBlacklistService;
 import com.example.linkedinSample.service.UsersService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,15 +14,24 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = "users")
 public class UsersController {
-    @Autowired
     private final UsersService usersService;
+    private final FeignClientInterceptor feignClientInterceptor;
+    private final JwtBlacklistService jwtBlacklistService;
 
-    public UsersController(UsersService usersService) {
+    public UsersController(
+            UsersService usersService,
+            FeignClientInterceptor
+                    feignClientInterceptor,
+            JwtBlacklistService jwtBlacklistService) {
         this.usersService = usersService;
+        this.feignClientInterceptor = feignClientInterceptor;
+        this.jwtBlacklistService = jwtBlacklistService;
     }
 
     @GetMapping(path = "getallusers/{page}")
-    public ResponseEntity<?> getUsers(@PathVariable("page") int page) {
+    public ResponseEntity<?> getUsers(@PathVariable("page") int page) throws TokenExpireException {
+        jwtBlacklistService.checkAccessTokenExpire
+                (feignClientInterceptor.getBearerTokenHeader().replace("Bearer ",""));
         return usersService.getUsers(page).createResponseEntity();
     }
 
