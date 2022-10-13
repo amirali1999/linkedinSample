@@ -1,4 +1,4 @@
-package com.example.linkedinSample.entity;
+package com.example.linkedinSample.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

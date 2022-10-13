@@ -1,6 +1,6 @@
 package com.example.linkedinSample.service;
 
-import com.example.linkedinSample.entity.JwtBlacklist;
+import com.example.linkedinSample.model.JwtBlacklist;
 import com.example.linkedinSample.exception.type.TokenExpireException;
 import com.example.linkedinSample.repository.JwtBlacklistRepository;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,7 @@
 package com.example.linkedinSample.controller;
 
 import com.example.linkedinSample.FeignClientInterceptor;
-import com.example.linkedinSample.entity.JwtBlacklist;
-import com.example.linkedinSample.entity.Users;
+import com.example.linkedinSample.model.Users;
 import com.example.linkedinSample.exception.type.*;
 import com.example.linkedinSample.service.JwtBlacklistService;
 import com.example.linkedinSample.service.UsersService;

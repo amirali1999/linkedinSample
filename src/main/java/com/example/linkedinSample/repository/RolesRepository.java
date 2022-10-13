@@ -1,6 +1,6 @@
 package com.example.linkedinSample.repository;
 
-import com.example.linkedinSample.entity.Roles;
+import com.example.linkedinSample.model.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

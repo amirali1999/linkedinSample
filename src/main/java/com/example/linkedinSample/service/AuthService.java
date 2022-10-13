@@ -4,17 +4,16 @@ import com.example.linkedinSample.FeignClientInterceptor;
 import com.example.linkedinSample.UserToolBox;
 import com.example.linkedinSample.config.security.jwt.JwtUtils;
 import com.example.linkedinSample.config.security.services.UserDetailsImpl;
-import com.example.linkedinSample.entity.RefreshToken;
+import com.example.linkedinSample.model.RefreshToken;
 import com.example.linkedinSample.repository.RefreshTokenRepository;
 import com.example.linkedinSample.request.LoginRequest;
 import com.example.linkedinSample.request.SignUpRequest;
-import com.example.linkedinSample.entity.Users;
+import com.example.linkedinSample.model.Users;
 import com.example.linkedinSample.exception.type.*;
 import com.example.linkedinSample.repository.RolesRepository;
 import com.example.linkedinSample.repository.UsersRepository;
 import com.example.linkedinSample.response.JwtResponse;
 import com.example.linkedinSample.response.Response;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

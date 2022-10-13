@@ -1,6 +1,6 @@
 package com.example.linkedinSample.repository;
 
-import com.example.linkedinSample.entity.Users;
+import com.example.linkedinSample.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

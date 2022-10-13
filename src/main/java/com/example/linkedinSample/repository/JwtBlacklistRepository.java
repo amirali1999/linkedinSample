@@ -1,7 +1,6 @@
 package com.example.linkedinSample.repository;
 
-import com.example.linkedinSample.entity.JwtBlacklist;
-import com.example.linkedinSample.entity.RefreshToken;
+import com.example.linkedinSample.model.JwtBlacklist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

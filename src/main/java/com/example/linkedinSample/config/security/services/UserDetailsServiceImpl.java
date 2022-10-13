@@ -1,6 +1,6 @@
 package com.example.linkedinSample.config.security.services;
 
-import com.example.linkedinSample.entity.Users;
+import com.example.linkedinSample.model.Users;
 import com.example.linkedinSample.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

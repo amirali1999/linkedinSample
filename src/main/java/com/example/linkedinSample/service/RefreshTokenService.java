@@ -1,13 +1,12 @@
 package com.example.linkedinSample.service;
 
-import com.example.linkedinSample.entity.RefreshToken;
+import com.example.linkedinSample.model.RefreshToken;
 import com.example.linkedinSample.exception.type.TokenRefreshException;
 import com.example.linkedinSample.repository.RefreshTokenRepository;
 import com.example.linkedinSample.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Optional;

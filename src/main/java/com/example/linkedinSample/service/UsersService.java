@@ -2,15 +2,13 @@ package com.example.linkedinSample.service;
 
 import com.example.linkedinSample.UserToolBox;
 import com.example.linkedinSample.response.Response;
-import com.example.linkedinSample.entity.Users;
+import com.example.linkedinSample.model.Users;
 import com.example.linkedinSample.exception.type.*;
-import com.example.linkedinSample.repository.RolesRepository;
 import com.example.linkedinSample.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service

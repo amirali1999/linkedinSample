@@ -1,6 +1,6 @@
     package com.example.linkedinSample.response;
 
-import com.example.linkedinSample.entity.EGender;
+import com.example.linkedinSample.model.EGender;
 import lombok.Getter;
 import lombok.Setter;
 

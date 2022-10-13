@@ -1,7 +1,7 @@
 package com.example.linkedinSample.controller;
 
 import com.example.linkedinSample.config.security.jwt.JwtUtils;
-import com.example.linkedinSample.entity.RefreshToken;
+import com.example.linkedinSample.model.RefreshToken;
 import com.example.linkedinSample.request.LoginRequest;
 import com.example.linkedinSample.request.SignUpRequest;
 import com.example.linkedinSample.exception.type.*;

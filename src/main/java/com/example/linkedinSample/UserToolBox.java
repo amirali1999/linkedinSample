@@ -1,11 +1,10 @@
 package com.example.linkedinSample;
 
-import com.example.linkedinSample.entity.Roles;
-import com.example.linkedinSample.entity.Users;
+import com.example.linkedinSample.model.Roles;
+import com.example.linkedinSample.model.Users;
 import com.example.linkedinSample.exception.type.*;
 import com.example.linkedinSample.repository.RolesRepository;
 import com.example.linkedinSample.repository.UsersRepository;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

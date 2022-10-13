@@ -1,7 +1,7 @@
 package com.example.linkedinSample.config.security.services;
 
-import com.example.linkedinSample.entity.EGender;
-import com.example.linkedinSample.entity.Users;
+import com.example.linkedinSample.model.EGender;
+import com.example.linkedinSample.model.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

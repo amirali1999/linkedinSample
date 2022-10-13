@@ -1,6 +1,6 @@
 package com.example.linkedinSample.controller;
 
-import com.example.linkedinSample.entity.Roles;
+import com.example.linkedinSample.model.Roles;
 import com.example.linkedinSample.exception.type.DuplicateFieldException;
 import com.example.linkedinSample.exception.type.NotFoundException;
 import com.example.linkedinSample.service.RolesService;
