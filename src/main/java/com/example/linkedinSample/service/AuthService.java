@@ -65,7 +65,7 @@ public class AuthService {
     }
 
     //TODO-->change ResponseEntity
-    public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
+    public Response authenticateUser(LoginRequest loginRequest) {
         //Authentication
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
@@ -82,13 +82,13 @@ public class AuthService {
                 .collect(Collectors.toList());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,refreshToken.getToken(),
+        return new Response(HttpStatus.OK,"User signin successfully",new JwtResponse(jwt,refreshToken.getToken(),
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getName(),
                 userDetails.getEmail(),
                 userDetails.getGender(),
-                roles));
+                roles),1);
     }
 
     public Response registerUser(SignUpRequest signUpRequest)

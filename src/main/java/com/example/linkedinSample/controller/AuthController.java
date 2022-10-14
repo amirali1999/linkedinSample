@@ -38,7 +38,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        return authService.authenticateUser(loginRequest);
+        return authService.authenticateUser(loginRequest).createResponseEntity();
     }
 
     @PostMapping("/signup")
