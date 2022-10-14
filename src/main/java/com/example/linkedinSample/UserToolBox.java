@@ -27,12 +27,12 @@ public class UserToolBox {
 
     public Users toolBox(Users users) throws EmptyFieldException, DuplicateFieldException, InvalidCharacterException,
             InvalidLengthException, InvalidPasswordException, InvalidEmailException, InvalidRolesException {
-        checkEmptyFields(users);
+//        checkEmptyFields(users);
         checkDuplicateUsername(users.getUsername());
         checkDuplicateEmail(users.getEmail());
-        checkUsername(users.getUsername());
-        checkPassword(users.getPassword());
-        checkEmail(users.getEmail());
+//        checkUsername(users.getUsername());
+//        checkPassword(users.getPassword());
+//        checkEmail(users.getEmail());
         users = checkRoles(users);
         users.setPassword(encodePassword(users.getPassword()));
         return users;

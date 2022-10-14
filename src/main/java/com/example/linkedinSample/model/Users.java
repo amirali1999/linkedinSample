@@ -1,22 +1,30 @@
 package com.example.linkedinSample.model;
 
+import com.example.linkedinSample.customValidation.checkEmail.CheckEmail;
+import com.example.linkedinSample.customValidation.checkUsernameLength.CheckUsernameLength;
+import com.example.linkedinSample.customValidation.checkValidCharacter.CheckValidCharacter;
+import com.example.linkedinSample.customValidation.ckeckPassword.CheckPassword;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "users",schema = "public",catalog = "linkedinSample")
+@Table(name = "users", schema = "public", catalog = "linkedinSample")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+//@ToString
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +32,18 @@ public class Users {
     private long id;
     @Column(name = "name")
     private String name;
+    @NotBlank
+    @CheckUsernameLength
+    @CheckValidCharacter
     @Column(name = "username")
     private String username;
+    @NotBlank
+    @CheckPassword
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password")
     private String password;
+    @NotBlank
+    @CheckEmail
     @Column(name = "email")
     private String email;
     @Enumerated(EnumType.STRING)
@@ -40,9 +55,9 @@ public class Users {
             CascadeType.MERGE,
             CascadeType.PERSIST,
             CascadeType.REFRESH}
-            )
+    )
     @Fetch(FetchMode.JOIN)
-    @JoinTable(	name = "users_roles",
+    @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Roles> roles;
@@ -52,7 +67,7 @@ public class Users {
             CascadeType.REFRESH}
     )
     @Fetch(FetchMode.JOIN)
-    @JoinTable(	name = "users_skill",
+    @JoinTable(name = "users_skill",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills;
@@ -104,6 +119,7 @@ public class Users {
     public Users(String username) {
         this.username = username;
     }
+
 
 //    @Override
 //    public String toString() {
