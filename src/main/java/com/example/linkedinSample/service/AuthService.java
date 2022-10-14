@@ -68,12 +68,10 @@ public class AuthService {
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
         //Authentication
         Authentication authentication = authenticationManager.authenticate(
-                //is an implementation of the Authentication interface which specifies that the user wants to
-                // authenticate using a username and password
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
         );
+//        System.out.println(authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         //create jwt access token
         String jwt = jwtUtils.generateJwtToken(authentication);
         //get authenticate user's details like email and username to userDetails

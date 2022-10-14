@@ -22,10 +22,12 @@ public class JwtUtils {
 
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        System.out.println();
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+//                .claim("roles",((UserDetailsImpl) authentication.getPrincipal()).getAuthorities())
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }

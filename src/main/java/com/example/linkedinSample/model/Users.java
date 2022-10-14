@@ -6,6 +6,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -45,6 +46,16 @@ public class Users {
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Roles> roles;
+    @ManyToMany(cascade = {CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH}
+    )
+    @Fetch(FetchMode.JOIN)
+    @JoinTable(	name = "users_skill",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    private List<Skill> skills;
 
     public Users(String name, String username, String password, String email, EGender gender, String aboutMe) {
         this.name = name;
@@ -70,6 +81,24 @@ public class Users {
         this.password = password;
         this.email = email;
         this.gender = gender;
+    }
+
+    public Users(String name,
+                 String username,
+                 String password,
+                 String email,
+                 EGender gender,
+                 String aboutMe,
+                 Set<Roles> roles,
+                 List<Skill> skills) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.gender = gender;
+        this.aboutMe = aboutMe;
+        this.roles = roles;
+        this.skills = skills;
     }
 
     public Users(String username) {

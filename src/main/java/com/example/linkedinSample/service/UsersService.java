@@ -1,30 +1,43 @@
 package com.example.linkedinSample.service;
 
+import com.example.linkedinSample.FeignClientInterceptor;
 import com.example.linkedinSample.UserToolBox;
-import com.example.linkedinSample.response.Response;
-import com.example.linkedinSample.model.Users;
+import com.example.linkedinSample.config.security.jwt.JwtUtils;
 import com.example.linkedinSample.exception.type.*;
+import com.example.linkedinSample.model.Skill;
+import com.example.linkedinSample.model.Users;
+import com.example.linkedinSample.repository.SkillRepository;
 import com.example.linkedinSample.repository.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.linkedinSample.request.UserUpdateRequest;
+import com.example.linkedinSample.response.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UsersService {
-    @Autowired
     private final UsersRepository usersRepository;
-    @Autowired
     private final UserToolBox userToolBox;
+    private final JwtUtils jwtUtils;
+    private final SkillRepository skillRepository;
+    private final FeignClientInterceptor feignClientInterceptor;
 
-    public UsersService(UsersRepository usersRepository, UserToolBox userToolBox) {
+    public UsersService(UsersRepository usersRepository,
+                        UserToolBox userToolBox,
+                        JwtUtils jwtUtils,
+                        SkillRepository skillRepository, FeignClientInterceptor feignClientInterceptor) {
         this.usersRepository = usersRepository;
         this.userToolBox = userToolBox;
+        this.jwtUtils = jwtUtils;
+        this.skillRepository = skillRepository;
+        this.feignClientInterceptor = feignClientInterceptor;
     }
 
     public Response getUsers(int page) {
-        Page<Users> pages = usersRepository.findAll(PageRequest.of(page-1,10));
+        Page<Users> pages = usersRepository.findAll(PageRequest.of(page - 1, 10));
         return new Response(HttpStatus.OK,
                 "Get Users successfully!",
                 pages.get(),
@@ -41,37 +54,96 @@ public class UsersService {
 
     public Response deleteUsers(Users users) throws NotFoundException {
         users = usersRepository.findByUsername(users.getUsername())
-                .orElseThrow(()-> new NotFoundException("User not found!"));
+                .orElseThrow(() -> new NotFoundException("User not found!"));
         usersRepository.delete(users);
-        return new Response(HttpStatus.OK, "Delete Users successfully!",users, 1);
+        return new Response(HttpStatus.OK, "Delete Users successfully!", users, 1);
     }
 
-    public Response putUsers(Users users,String usersName)
+    public Response putUsers(Users users, String usersName)
             throws NotFoundException, DuplicateFieldException, InvalidCharacterException, InvalidLengthException,
             InvalidPasswordException, InvalidEmailException, InvalidGenderException {
         Users previousUsers = usersRepository.findByUsername(usersName)
-                .orElseThrow(()->new NotFoundException("User not found!"));
-        if(users.getName() != null){
+                .orElseThrow(() -> new NotFoundException("User not found!"));
+        if (users.getName() != null) {
             previousUsers.setName(users.getName());
         }
-        if(users.getUsername() != null){
+        if (users.getUsername() != null) {
             userToolBox.checkDuplicateUsername(users.getUsername());
             userToolBox.checkUsername(users.getUsername());
             previousUsers.setUsername(users.getUsername());
         }
-        if(users.getPassword() != null){
+        if (users.getPassword() != null) {
             userToolBox.checkPassword(users.getPassword());
-            previousUsers.setPassword(users.getPassword());
+            previousUsers.setPassword(userToolBox.encodePassword(users.getPassword()));
         }
-        if(users.getEmail() != null){
+        if (users.getEmail() != null) {
             userToolBox.checkDuplicateEmail(users.getEmail());
             userToolBox.checkEmail(users.getEmail());
             previousUsers.setEmail(users.getEmail());
         }
-        if(users.getGender() != null){
+        if (users.getGender() != null) {
             previousUsers.setGender(users.getGender());
         }
         usersRepository.save(previousUsers);
         return new Response(HttpStatus.OK, "Update Users successfully!", previousUsers, 1);
+    }
+
+    public Response userUpdateRequest(UserUpdateRequest userUpdateRequest) throws InvalidPasswordException {
+        String accessToken = feignClientInterceptor.getBearerTokenHeader().replace("Bearer ", "");
+        String username = jwtUtils.getUserNameFromJwtToken(accessToken);
+        Users users = usersRepository.findByUsername(username).orElse(null);
+        if (userUpdateRequest.getName() != null) {
+            users.setName(userUpdateRequest.getName());
+        }
+        if (userUpdateRequest.getPassword() != null) {
+            userToolBox.checkPassword(userUpdateRequest.getPassword());
+            users.setPassword(userToolBox.encodePassword(userUpdateRequest.getPassword()));
+        }
+        if (userUpdateRequest.getAboutMe() != null) {
+            users.setAboutMe(userUpdateRequest.getAboutMe());
+        }
+        usersRepository.save(users);
+        return new Response(HttpStatus.OK, "Update Users successfully!", users, 1);
+
+    }
+
+    public Response addSkillToUser(long skillId) throws DuplicateFieldException, NotFoundException {
+        String accessToken = feignClientInterceptor.getBearerTokenHeader().replace("Bearer ", "");
+        String username = jwtUtils.getUserNameFromJwtToken(accessToken);
+        Users users = usersRepository.findByUsername(username).orElse(null);
+        Skill wantedSkill = skillRepository.findById(skillId).orElse(null);
+        if(wantedSkill == null){
+            throw new NotFoundException("skill not found!");
+        }
+        List<Skill> userSkills = users.getSkills();
+        for (Skill skill : userSkills) {
+            if (skill.getId() == skillId) {
+                throw new DuplicateFieldException("skill is founded in user's skills");
+            }
+        }
+        userSkills.add(wantedSkill);
+        users.setSkills(userSkills);
+        usersRepository.save(users);
+        return new Response(HttpStatus.OK, "Update Users successfully!", users, 1);
+    }
+
+    public Response removeSkillToUser(long skillId) throws NotFoundException {
+        String accessToken = feignClientInterceptor.getBearerTokenHeader().replace("Bearer ", "");
+        String username = jwtUtils.getUserNameFromJwtToken(accessToken);
+        Users users = usersRepository.findByUsername(username).orElse(null);
+        Skill wantedSkill = skillRepository.findById(skillId).orElse(null);
+        if(wantedSkill == null){
+            throw new NotFoundException("skill not found!");
+        }
+        List<Skill> userSkills = users.getSkills();
+        for (Skill skill : userSkills) {
+            if (skill.getId() == skillId) {
+                userSkills.remove(wantedSkill);
+                users.setSkills(userSkills);
+                usersRepository.save(users);
+                return new Response(HttpStatus.OK, "Update Users successfully!", users, 1);
+            }
+        }
+        throw new NotFoundException("skill not found!");
     }
 }
