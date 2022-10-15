@@ -10,6 +10,8 @@ import com.example.linkedinSample.repository.SkillRepository;
 import com.example.linkedinSample.repository.SubjectRepository;
 import com.example.linkedinSample.request.UserSkillRequest;
 import com.example.linkedinSample.response.Response;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -23,22 +25,38 @@ import java.util.List;
 public class SkillService {
     private final SkillRepository skillRepository;
     private final SubjectRepository subjectRepository;
+    private final MessageSource messageSource;
 
-    public SkillService(SkillRepository skillRepository, SubjectRepository subjectRepository) {
+    public SkillService(SkillRepository skillRepository,
+                        SubjectRepository subjectRepository,
+                        MessageSource messageSource) {
         this.skillRepository = skillRepository;
         this.subjectRepository = subjectRepository;
+        this.messageSource = messageSource;
     }
 
     public Response getUsers(int page) {
         Page<Skill> pages = skillRepository.findAll(PageRequest.of(page - 1, 10));
-        return new Response(HttpStatus.OK, "Get skills successfully!", pages.get(), pages.getTotalPages());
+        return new Response(HttpStatus.OK,
+                messageSource.getMessage("get.skill.successfully",
+                        null,
+                        LocaleContextHolder.getLocale()
+                ),
+                pages.get(),
+                pages.getTotalPages());
     }
 
     public Response postUsers(Skill skill) throws DuplicateFieldException, EmptyFieldException {
         checkEmptyFields(skill);
         isSkillUnique(skill);
         skillRepository.save(skill);
-        return new Response(HttpStatus.OK, "Add skill successfully!", skill, 1);
+        return new Response(HttpStatus.OK,
+                messageSource.getMessage("add.skill.successfully",
+                        null,
+                        LocaleContextHolder.getLocale()
+                ),
+                skill,
+                1);
     }
 
     public Response postSkillByUser(UserSkillRequest userSkillRequest)
@@ -49,7 +67,13 @@ public class SkillService {
         checkEmptyFields(skill);
         isSkillUnique(skill);
         skillRepository.save(skill);
-        return new Response(HttpStatus.OK, "Add skill successfully!", userSkillRequest, 1);
+        return new Response(HttpStatus.OK,
+                messageSource.getMessage("add.skill.successfully",
+                        null,
+                        LocaleContextHolder.getLocale()
+                ),
+                userSkillRequest,
+                1);
     }
 
     public Response deleteSkill(long id) throws NotFoundException, SkillWasDeletedException {
@@ -59,7 +83,13 @@ public class SkillService {
         findedskill.setVerify(false);
         findedskill.setDateOfDelete(new Date());
         skillRepository.save(findedskill);
-        return new Response(HttpStatus.OK, "Delete skill successfully!", findedskill, 1);
+        return new Response(HttpStatus.OK,
+                messageSource.getMessage("delete.skill.successfully",
+                        null,
+                        LocaleContextHolder.getLocale()
+                ),
+                findedskill,
+                1);
     }
 
     public Response putSkill(long id, Skill skill)
@@ -80,7 +110,13 @@ public class SkillService {
         }
         isSkillUnique(searchedSkill);
         skillRepository.save(searchedSkill);
-        return new Response(HttpStatus.OK, "Update Skill successfully!", searchedSkill, 1);
+        return new Response(HttpStatus.OK,
+                messageSource.getMessage("update.skill.successfully",
+                        null,
+                        LocaleContextHolder.getLocale()
+                ),
+                searchedSkill,
+                1);
     }
 
     public Response getSkillByName(String skillName) throws NotFoundException {
@@ -94,7 +130,13 @@ public class SkillService {
                 containSkills.add(skill);
             }
         }
-        return new Response(HttpStatus.OK, "Get skills successfully!",containSkills, 1);
+        return new Response(HttpStatus.OK,
+                messageSource.getMessage("get.skill.successfully",
+                        null,
+                        LocaleContextHolder.getLocale()
+                ),
+                containSkills,
+                1);
     }
 
     public Response getSkillById(long id) throws NotFoundException {
@@ -102,12 +144,24 @@ public class SkillService {
         if (skill==null){
             throw new NotFoundException("Skill not found!");
         }
-        return new Response(HttpStatus.OK, "Get skill successfully!", skill, 1);
+        return new Response(HttpStatus.OK,
+                messageSource.getMessage("get.skill.successfully",
+                        null,
+                        LocaleContextHolder.getLocale()
+                ),
+                skill,
+                1);
     }
 
     public Response getSkillByVerify(int page, boolean verify) {
         Page<Skill> pages = skillRepository.findByVerify(verify, PageRequest.of(page - 1, 10));
-        return new Response(HttpStatus.OK, "Get skills successfully!", pages.get(), pages.getTotalPages());
+        return new Response(HttpStatus.OK,
+                messageSource.getMessage("get.skill.successfully",
+                        null,
+                        LocaleContextHolder.getLocale()
+                ),
+                pages.get(),
+                pages.getTotalPages());
     }
 
     private void checkEmptyFields(Skill skill) throws EmptyFieldException {

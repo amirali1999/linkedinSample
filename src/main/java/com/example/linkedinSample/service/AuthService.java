@@ -82,7 +82,7 @@ public class AuthService {
                 .collect(Collectors.toList());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        return new Response(HttpStatus.OK,"User signin successfully",new JwtResponse(jwt,refreshToken.getToken(),
+        return new Response(HttpStatus.OK,"user.signin.successfully",new JwtResponse(jwt,refreshToken.getToken(),
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getName(),
@@ -103,7 +103,7 @@ public class AuthService {
         );
         users = userToolBox.toolBox(users);
         usersRepository.save(users);
-        return new Response(HttpStatus.OK, "User registered successfully!", signUpRequest, 1);
+        return new Response(HttpStatus.OK, "user.registered.successfully", signUpRequest, 1);
     }
     @Transactional
     public Response logoutUser(){
@@ -112,6 +112,6 @@ public class AuthService {
         Users users = usersRepository.findByUsername(username).orElse(null);
         refreshTokenRepository.deleteAccessTokens(users.getId());
         jwtBlacklistService.saveTokenToBlackList(accessToken,jwtUtils.getExpireDateFromJwtToken(accessToken));
-        return new Response(HttpStatus.OK, "User logout successfully!",null, 1);
+        return new Response(HttpStatus.OK, "user.logout.successfully",null, 1);
     }
 }

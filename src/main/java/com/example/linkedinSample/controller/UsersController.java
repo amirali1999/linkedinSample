@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Locale;
 
 @RestController
 @RequestMapping(path = "users")
@@ -18,6 +19,7 @@ public class UsersController {
     private final UsersService usersService;
     private final FeignClientInterceptor feignClientInterceptor;
     private final JwtBlacklistService jwtBlacklistService;
+
 
     public UsersController(
             UsersService usersService,
@@ -30,7 +32,8 @@ public class UsersController {
     }
     @PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping(path = "getallusers/{page}")
-    public ResponseEntity<?> getUsers(@PathVariable("page") int page) throws TokenExpireException {
+    public ResponseEntity<?> getUsers(@PathVariable("page") int page)
+            throws TokenExpireException {
         jwtBlacklistService.checkAccessTokenExpire
                 (feignClientInterceptor.getBearerTokenHeader().replace("Bearer ",""));
         return usersService.getUsers(page).createResponseEntity();
